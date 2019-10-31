@@ -42,8 +42,8 @@ app.get('*', function (req, res) {
   res.sendFile(path.resolve(__dirname + '/public/index.html'));
 });
 
-http.createServer(app).listen(80);
-logger.info('HTTP server start on 80');
+http.createServer(app).listen(8080);
+logger.info('HTTP server start on 8080');
 
 process.on('uncaughtException', function (err) {
   logger.error('An uncaught error occurred! ', err);
