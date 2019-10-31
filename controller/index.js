@@ -42,11 +42,13 @@ router.post('/book', mutipartMiddeware, function (req,res) {
     let newName = arr[arr.length-1];
     let fileId = uuidv1();
     logger.info("upload file", newName);
+    var myDate = new Date();
 
     let fileInfo = {
         "id": fileId,
         "display_name": fileName,
-        "save_name": newName
+        "save_name": newName,
+        "create_dt": myDate.toLocaleString()
     }
     let fileList = user['upload'];
     fileList.push(fileInfo);
