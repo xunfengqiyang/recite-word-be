@@ -4,7 +4,8 @@ const log4js = require('log4js');
 const logger = log4js.getLogger();
 const config = require('./config/config.js');
 const path = require('path');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const compression = require('compression')
 var mutipart= require('connect-multiparty');
 var bodyParser = require("body-parser"); 
 
@@ -30,6 +31,7 @@ log4js.configure({
   });
 
 const app = express();
+app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));  
 app.use(bodyParser.json());
 app.use(cookieParser());
