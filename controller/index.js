@@ -18,9 +18,10 @@ router.get('/book', function (req, res) {
     res.send({"success": true, "result": fileList});
 })
 
-// get a book
+// get a book info
 router.get('/book/:id', function (req, res) {
     let bookId = req.params.id;
+    console.log("get book info:"+bookId);
     let fileList = user['upload'];
 
     for (let i = 0; i < fileList.length; i++) {
@@ -32,6 +33,55 @@ router.get('/book/:id', function (req, res) {
     }
     res.send({"success": true, "result": {}});
 })
+
+// get word list by book id
+router.get('/book/words/:id', function (req, res) {
+    let bookId = req.params.id;
+    let fileList = user['upload'];
+
+    for (let i = 0; i < fileList.length; i++) {
+        const element = fileList[i];
+        if (element.id == bookId) {
+            let file_path = path.resolve(__dirname + '/../upload/' + element.save_name);
+            fs.readFile(file_path, function (err, data) {
+                if (err) {
+                    res.send({"success": false, "result": ""});
+                }
+                else {
+                    let content = data.toString("utf-8");
+                    let arr = content.split('\n');
+                    res.send({"success": true, "result": arr });
+                }
+            })
+            return;
+        }
+    }
+    res.send({"success": false, "result": "can't find this book"});
+})
+
+// delete a book
+router.delete("/book/:id", function (req, res) {
+    let bookId = req.params.id;
+    let fileList = user['upload'];
+
+    for (let i = 0; i < fileList.length; i++) {
+        const element = fileList[i];
+        if (element.id == bookId) {
+            let file_path = path.resolve(__dirname + '/../upload/' + element.save_name);
+            fileList.splice(i, 1);
+            writeFileList(fileList);
+            fs.unlink(file_path, function(err) {
+                if (err) {
+                    logger.error(err);
+                    res.send({"success": false, "result": arr });
+                }
+                res.send({"success": true, "result": "" });
+             });
+        }
+    }
+    res.send({"success": false, "result": "can't find this book"});
+})
+
 // upload a book
 router.post('/book', mutipartMiddeware, function (req,res) {
     
@@ -48,18 +98,13 @@ router.post('/book', mutipartMiddeware, function (req,res) {
         "id": fileId,
         "display_name": fileName,
         "save_name": newName,
-        "create_dt": myDate.toLocaleString()
+        "create_by": "sys",
+        "create_dt": myDate.toLocaleDateString() + myDate.toLocaleTimeString()
     }
     let fileList = user['upload'];
     fileList.push(fileInfo);
 
-    user['upload'] = fileList;
-    let userPath = path.resolve(__dirname + '/../data/user.json');
-    fs.writeFile(userPath, JSON.stringify(user), { 'flag': 'w' }, function (err) {
-        if (err) {
-            logger.error("write user data", err); 
-        }
-    })
+    writeFileList(fileList);
     res.cookie("fileId", fileId);
     res.send(req.cookies);
 })
@@ -93,5 +138,15 @@ router.get('/heart', function (req, res) {
     logger.info("heart beat");
     res.send({"success": true})
 })
+
+function writeFileList(fileList) {
+    user['upload'] = fileList;
+    let userPath = path.resolve(__dirname + '/../data/user.json');
+    fs.writeFile(userPath, JSON.stringify(user), { 'flag': 'w' }, function (err) {
+        if (err) {
+            logger.error("write user data", err); 
+        }
+    })
+}
 
 module.exports = router;
