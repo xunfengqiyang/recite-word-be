@@ -129,7 +129,7 @@ router.post('/book', mutipartMiddeware, function (req,res) {
 router.get('/search', function (req, res) {
     let word = req.query.word;
     translator.translate(word, function (txt) {
-        res.send({"success": true, "data": txt})
+        res.send({"success": true, "result": txt})
     });
 })
 
