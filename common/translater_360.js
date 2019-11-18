@@ -4,7 +4,7 @@ const request = require('request');
 
 exports.translate = function(txt, callback) {
 
-    let url = `http://fanyi.so.com/index/search?query=${txt}&eng=0`
+    let url = `http://fanyi.so.com/index/search?eng=1&validate=&ignore_trans=0&query=${txt}`
     request.get(encodeURI(url), function (error, response, body) {
         let res = JSON.parse(body);
         if(response.statusCode == 200 && res.error == 0) {
