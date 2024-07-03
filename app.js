@@ -41,7 +41,7 @@ app.use(express.static(path.join(__dirname, config.STATIC_PATH)));
 app.use('/', require("./controller/index.js"));
 
 app.get('*', function (req, res) {
-  res.sendFile(path.resolve(__dirname + '/public/index.html'));
+  res.sendFile(path.resolve(__dirname + '/public/index2.html'));
 });
 
 http.createServer(app).listen(8080);
@@ -50,3 +50,4 @@ logger.info('HTTP server start on 8080');
 process.on('uncaughtException', function (err) {
   logger.error('An uncaught error occurred! ', err);
 });
+

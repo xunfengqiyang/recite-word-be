@@ -9,6 +9,14 @@ var mutipartMiddeware = mutipart();
 var fs = require("fs")
 var user = require('../data/user.json');
 const translator = require('../common/translater_360')
+const robotor = require('../common/robot_api')
+
+router.get('/robot', function (req, res) {
+    console.log("get robot data");
+    robotor.robot(1, function (txt) {
+        res.send({"success": true, "result": txt})
+    });
+})
 
 
 // get book list
